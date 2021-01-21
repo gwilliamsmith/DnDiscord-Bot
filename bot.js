@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 
 const client = new Discord.Client();
 
+const config = require("./config.json")
+
  
 
 client.on('ready', () => {
@@ -12,7 +14,6 @@ client.on('ready', () => {
 });
 
  
-
 client.on('message', message => {
 
     if (message.content === 'ping') {
@@ -28,6 +29,6 @@ client.on('message', message => {
 
  
 
-// THIS  MUST  BE  THIS  WAY
+// Provide token from config.json
 
-client.login(process.env.BOT_TOKEN);//BOT_TOKEN is the Client Secret
+client.login(config.token);//BOT_TOKEN is the Client Secret
