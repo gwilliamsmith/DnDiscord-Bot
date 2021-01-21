@@ -7,6 +7,7 @@ const client = new Discord.Client();
 client.on('ready', () => {
 
     console.log('I am ready!');
+    console.log('hello world');
 
 });
 
@@ -19,6 +20,9 @@ client.on('message', message => {
        message.reply('pong');
 
        }
+    if (message.content === "test"){
+    	message.reply("tested");
+    }
 
 });
 
