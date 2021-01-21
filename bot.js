@@ -1,33 +1,24 @@
 const Discord = require('discord.js');
-
 const client = new Discord.Client();
 
+//Config file
 const config = require("./config.json")
 
- 
+const mongo = require('./mongo')
 
-client.on('ready', () => {
+client.on('ready', async () => {
+	console.log("online")
 
-    console.log('I am ready!');
-    console.log('hello world');
+	await mongo().then(mongoose => {
+		try{
+			console.log("trying...")
+		} finally {
+			mongoose.connection.close()
+			console.log("end")
+		}
+	})
 
-});
-
- 
-client.on('message', message => {
-
-    if (message.content === 'ping') {
-
-       message.reply('pong');
-
-       }
-    if (message.content === "test"){
-    	message.reply("tested");
-    }
-
-});
-
- 
+})
 
 // Provide token from config.json
 
