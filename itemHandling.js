@@ -26,6 +26,7 @@ module.exports = (client) => {
 		}
 
 		await mongo().then(async (mongoose) => {
+			var success = false
 			try {
 				await new itemSchema({
 					name: parts[1],
@@ -34,12 +35,16 @@ module.exports = (client) => {
 					owner: message.author.id,
 					description: parts[2]
 				}).save()
+				success = true
 			} catch(e){
 				if(e.code = 'E11000'){
 					channel.send('<@' + message.author.id + '> An item with that name already exists. You can use !updateItem to change its description, or !viewItem to check its properties.')
 				}
 			} finally {
 				mongoose.connection.close()
+				if(success){
+					channel.send('<@' + message.author.id + '>, item added!')
+				}
 			}
 		})
 	})
@@ -64,6 +69,7 @@ module.exports = (client) => {
 		}
 
 		await mongo().then(async (mongoose) => {
+			var success = false
 			try{
 				const check = await itemSchema.exists({name: parts[1], server_id: guild.id})
 				if(check){
@@ -73,12 +79,16 @@ module.exports = (client) => {
 					},{
 						$set : {description: parts[2]}
 					})
+					success = true
 				}
 				else {
 					channel.send('<@' + message.author.id + '>, that item does not exist. You can use !addItem to create a new item.')
 				}
 			} finally {
 				mongoose.connection.close()
+				if(success){
+					channel.send('<@' + message.author.id + '>, item updated!')
+				}
 			}
 		})
 	})
@@ -86,7 +96,7 @@ module.exports = (client) => {
 	//!viewItem [NAME]
 	//Grabs an item from the server's list and shows its description
 	command(client, 'viewItem', async (message) => {
-				const { member, channel, content, guild} = message
+		const { member, channel, content, guild} = message
 
 		let text = content
 		var parts = text.split(/ +/)
@@ -115,4 +125,33 @@ module.exports = (client) => {
 		})
 	})
 
+	//!deleteItem [NAME]
+	//Deletes an item from the server's list of items
+	command(client, 'deleteItem', async (message) => {
+		const { member, channel, content, guild} = message
+
+		let text = content
+		var parts = text.split(/ +/)
+		parts.shift()
+		//[NAME]
+		text = parts.join(' ')
+		parts = text.split('[')
+		if(parts.length != 2){
+			channel.send('<@' + message.author.id + '>, !viewItem does not have the correct number of parameters. !deleteItem must contain the following parameters: [name].')
+			return
+		}
+		name = parts[1].trim().replace(']','')
+		await mongo().then(async (mongoose) => {
+			var success
+			try{
+				const check = await itemSchema.deleteOne({name, server_id : guild.id})
+				success = true
+			} finally { 
+				mongoose.connection.close()
+				if(success){
+					channel.send('<@' + message.author.id + '>, item deleted!')
+				}
+			}
+		})
+	})
 }
