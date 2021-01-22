@@ -13,21 +13,15 @@ module.exports = (client) => {
 
 		let text = content
 		var parts = text.split(/ +/)
-
-		if(parts.length < 2){
-			channel.send('Please provide an item name')
-			return
-		}
-
 		parts.shift()
 		//[NAME] [DESC]
 		text = parts.join(' ')
 		parts = text.split('[')
+		if(parts.length < 3){
+			channel.send('<@' + message.author.id + '>, !addItem does not have the correct number of parameters. !addItem must contain the following parameters: [name] [description]')
+			return
+		}
 		for (i=0; i<parts.length; i++){
-			if(i > 2){
-				channel.send('addItem must contain the following parameters: [name] [description]')
-				return
-			}
 			parts[i] = parts[i].trim().replace(']','')
 		}
 
@@ -38,7 +32,6 @@ module.exports = (client) => {
 					server_id: guild.id,
 					party: true,
 					owner: message.author.id,
-					quantity: '1',
 					description: parts[2]
 				}).save()
 			} catch(e){
@@ -58,23 +51,18 @@ module.exports = (client) => {
 
 		let text = content
 		var parts = text.split(/ +/)
-
-		if(parts.length < 2){
-			channel.send('Please provide an item name')
-			return
-		}
-
 		parts.shift()
 		//[NAME] [DESC]
 		text = parts.join(' ')
 		parts = text.split('[')
+		if(parts.length < 3){
+			channel.send('<@' + message.author.id + '>, !updateItem does not have the correct number of parameters. !updateItem must contain the following parameters: [name] [description]')
+			return
+		}
 		for (i=0; i<parts.length; i++){
-			if(i > 2){
-				channel.send('addItem must contain the following parameters: [name] [description]')
-				return
-			}
 			parts[i] = parts[i].trim().replace(']','')
 		}
+
 		await mongo().then(async (mongoose) => {
 			try{
 				const check = await itemSchema.exists({name: parts[1], server_id: guild.id})
@@ -93,7 +81,41 @@ module.exports = (client) => {
 				mongoose.connection.close()
 			}
 		})
+	})
 
+	//!viewItem [NAME]
+	//Grabs an item from the server's list and shows its description
+	command(client, 'viewItem', async (message) => {
+				const { member, channel, content, guild} = message
+
+		let text = content
+		var parts = text.split(/ +/)
+		parts.shift()
+		//[NAME]
+		text = parts.join(' ')
+		parts = text.split('[')
+		if(parts.length != 2){
+			channel.send('<@' + message.author.id + '>, !viewItem does not have the correct number of parameters. !viewItem must contain the following parameters: [name].')
+			return
+		}
+		console.log(parts.length)
+		console.log(parts)
+		name = parts[1].trim().replace(']','')
+		console.log(name)
+		await mongo().then(async (mongoose) => {
+			try{
+				const check = await itemSchema.exists({name, server_id: guild.id})
+				if(!check){
+					channel.send('<@' + message.author.id + '>, that item does not exist here.')
+				}
+				else {
+					const data = await itemSchema.find({name, server_id: guild.id})
+					channel.send('**' + name + '**' + '\n> ' + data[0]['description'])
+				}
+			} finally {
+				mongoose.connection.close()
+			}
+		})
 	})
 
 }

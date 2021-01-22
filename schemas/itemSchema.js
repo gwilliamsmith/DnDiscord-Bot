@@ -10,7 +10,6 @@ const itemSchema = mongoose.Schema({
 	server_id: reqString,
 	party: Boolean,
 	owner: reqString,
-	quantity: String,
 	description: String
 })
 
