@@ -25,7 +25,7 @@ module.exports = (client) => {
 				channel.send('addItem must contain the following parameters: [name] [description]')
 				return
 			}
-			parts[i] = parts[i].replace(']','')
+			parts[i] = parts[i].trim().replace(']','')
 		}
 
 		await mongo().then(async (mongoose) => {
@@ -38,6 +38,10 @@ module.exports = (client) => {
 					quantity: '1',
 					description: parts[2]
 				}).save()
+			} catch(e){
+				if(e.code = 'E11000'){
+					channel.send('<@' + message.author.id + '> An item with that name already exists. You can use !updateItem to change its description, or !viewItem to check its properties')
+				}
 			} finally {
 				mongoose.connection.close()
 			}
