@@ -98,10 +98,7 @@ module.exports = (client) => {
 			channel.send('<@' + message.author.id + '>, !viewItem does not have the correct number of parameters. !viewItem must contain the following parameters: [name].')
 			return
 		}
-		console.log(parts.length)
-		console.log(parts)
 		name = parts[1].trim().replace(']','')
-		console.log(name)
 		await mongo().then(async (mongoose) => {
 			try{
 				const check = await itemSchema.exists({name, server_id: guild.id})
