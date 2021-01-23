@@ -2,8 +2,6 @@ const mongo = require('./mongo')
 const command = require('./command')
 const itemSchema = require('./schemas/itemSchema')
 
-//TODO: Add permissions control to addItem and updateItem (admins, DMs)
-
 module.exports = (client) => {
 
 	//!addItem [NAME] [DESC]
@@ -11,18 +9,11 @@ module.exports = (client) => {
 	command(client, 'addItem', async (message) => {
 		const { member, channel, content, guild} = message
 
-		let text = content
-		var parts = text.split(/ +/)
-		parts.shift()
-		//[NAME] [DESC]
-		text = parts.join(' ')
-		parts = text.split('[')
-		if(parts.length < 3){
-			channel.send('<@' + message.author.id + '>, !addItem does not have the correct number of parameters. !addItem must contain the following parameters: [name] [description]')
+		checkPermissions(channel, member, message)
+
+		parts = checkParams(message, channel, content, 2, '!addItem', ['[name]','[description]'])
+		if(!parts.length){
 			return
-		}
-		for (i=0; i<parts.length; i++){
-			parts[i] = parts[i].trim().replace(']','')
 		}
 
 		await mongo().then(async (mongoose) => {
@@ -54,18 +45,11 @@ module.exports = (client) => {
 	command(client, 'updateItem', async (message) => {
 		const { member, channel, content, guild} = message
 
-		let text = content
-		var parts = text.split(/ +/)
-		parts.shift()
-		//[NAME] [DESC]
-		text = parts.join(' ')
-		parts = text.split('[')
-		if(parts.length < 3){
-			channel.send('<@' + message.author.id + '>, !updateItem does not have the correct number of parameters. !updateItem must contain the following parameters: [name] [description]')
+		checkPermissions(channel, message)
+
+		parts = checkParams(message, channel, content, 2, '!updateItem', ['[name]','[description]'])
+		if(!parts.length){
 			return
-		}
-		for (i=0; i<parts.length; i++){
-			parts[i] = parts[i].trim().replace(']','')
 		}
 
 		await mongo().then(async (mongoose) => {
@@ -98,17 +82,13 @@ module.exports = (client) => {
 	command(client, 'viewItem', async (message) => {
 		const { member, channel, content, guild} = message
 
-		let text = content
-		var parts = text.split(/ +/)
-		parts.shift()
-		//[NAME]
-		text = parts.join(' ')
-		parts = text.split('[')
-		if(parts.length != 2){
-			channel.send('<@' + message.author.id + '>, !viewItem does not have the correct number of parameters. !viewItem must contain the following parameters: [name].')
+
+		parts = checkParams(message, channel, content, 1, '!viewItem', ['[name]'])
+		if(!parts.length){
 			return
 		}
-		name = parts[1].trim().replace(']','')
+
+		name = parts[1]
 		await mongo().then(async (mongoose) => {
 			try{
 				const check = await itemSchema.exists({name, server_id: guild.id})
@@ -130,17 +110,13 @@ module.exports = (client) => {
 	command(client, 'deleteItem', async (message) => {
 		const { member, channel, content, guild} = message
 
-		let text = content
-		var parts = text.split(/ +/)
-		parts.shift()
-		//[NAME]
-		text = parts.join(' ')
-		parts = text.split('[')
-		if(parts.length != 2){
-			channel.send('<@' + message.author.id + '>, !viewItem does not have the correct number of parameters. !deleteItem must contain the following parameters: [name].')
+		checkPermissions(channel, member, message)
+
+		parts = checkParams(message, channel, content, 1, '!deleteItem', ['[name]'])
+		if(!parts.length){
 			return
 		}
-		name = parts[1].trim().replace(']','')
+
 		await mongo().then(async (mongoose) => {
 			var success
 			try{
@@ -154,4 +130,28 @@ module.exports = (client) => {
 			}
 		})
 	})
+
+	//Checks to 
+	function checkPermissions(channel, member, message){
+		if(!member.hasPermission('ADMINISTRATOR') && !member.roles.cache.has('802227962161266689')){
+			channel.send('<@' + message.author.id + '>, you do not have the appropriate permissions to use this command')
+			return
+		}
+	}
+
+	function checkParams(message, channel, content, num, command, params){
+		let text = content
+		var parts = text.split(/ +/)
+		parts.shift()
+		text = parts.join(' ')
+		parts = text.split('[')
+		if(parts.length < num+1){ //add 1 because split always looks like ['',...]
+			channel.send('<@' + message.author.id + '>, ' + command + ' does not have the correct number of parameters. ' + command + ' must contain the following parameters: ' + params)
+			return []
+		}
+		for (i=0; i<parts.length; i++){
+			parts[i] = parts[i].trim().replace(']','')
+		}
+		return parts
+	}
 }

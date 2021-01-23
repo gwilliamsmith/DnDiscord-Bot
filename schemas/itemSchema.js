@@ -15,4 +15,4 @@ const itemSchema = mongoose.Schema({
 
 itemSchema.index({ name: 1,	server_id: 1}, { unique: true})
 
-module.exports = mongoose.model('Inventory', itemSchema)
+module.exports = mongoose.model('ItemList', itemSchema)
