@@ -4,34 +4,6 @@ const itemSchema = require('./schemas/itemSchema')
 
 module.exports = (client) => {
 
-	//!viewItem [NAME]
-	//Grabs an item from the server's list and shows its description
-	command(client, 'viewItem', async (message) => {
-		const { member, channel, content, guild} = message
-
-
-		parts = checkParams(message, channel, content, 1, '!viewItem', ['[name]'])
-		if(!parts.length){
-			return
-		}
-
-		name = parts[1]
-		await mongo().then(async (mongoose) => {
-			try{
-				const check = await itemSchema.exists({name, server_id: guild.id})
-				if(!check){
-					channel.send('<@' + message.author.id + '>, that item does not exist here.')
-				}
-				else {
-					const data = await itemSchema.find({name, server_id: guild.id})
-					channel.send('**' + name + '**' + '\n> ' + data[0]['description'])
-				}
-			} finally {
-				mongoose.connection.close()
-			}
-		})
-	})
-
 	//!deleteItem [NAME]
 	//Deletes an item from the server's list of items
 	command(client, 'deleteItem', async (message) => {
