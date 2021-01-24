@@ -31,12 +31,12 @@ async function run(message, args){
             success = true
         } catch(e){
             if(e.code = 'E11000'){
-                channel.send(`<@${message.author.id}> An item with that name already exists. You can use ${prefix}updateItem to change its description, or ${prefix}viewItem to check its properties.`)
+                message.reply(` an item with that name already exists. You can use ${prefix}updateItem to change its description, or ${prefix}viewItem to check its properties.`)
             }
         } finally {
             mongoose.connection.close()
             if(success){
-                channel.send(`<@${message.author.id}>, item added!`)
+                message.reply(` item added!`)
             }
         }
     })

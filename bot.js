@@ -6,7 +6,6 @@ const fs = require('fs')
 //Config file
 const config = require('./config.json')
 const prefix = config.prefix
-const itemHandling = require('./itemHandling.js')
 
 client.commands = new Discord.Collection()
 

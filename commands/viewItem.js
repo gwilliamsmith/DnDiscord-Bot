@@ -21,7 +21,7 @@ async function run(message, args){
         try{
             const check = await itemSchema.exists({name: args[0], server_id: guild.id})
             if(!check){
-                channel.send(`<@${message.author.id}>, that item does not exist here.`)
+                message.reply(` that item does not exist here.`)
             }
             else {
                 const data = await itemSchema.find({name: args[0], server_id: guild.id})

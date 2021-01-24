@@ -32,12 +32,12 @@ async function run(message, args){
                 success = true
             }
             else {
-                channel.send(`<@${message.author.id}>, that item does not exist. You can use ${prefix}addItem to create a new item.`)
+                message.reply(` that item does not exist. You can use ${prefix}addItem to create a new item.`)
             }
         } finally {
             mongoose.connection.close()
             if(success){
-                channel.send('<@' + message.author.id + '>, item updated!')
+                message.reply(' item updated!')
             }
         }
     })
