@@ -4,12 +4,11 @@ const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'viewItem',
-	description: 'Shows an item to in server inventory',
+	description: 'Shows an item in server inventory',
 	minArgs: 1,
     maxArgs: 1,
     dbCommand: true,
     expectedArgs: ['[<name>]'],
-    requiredRole: 'DM',
 	execute(message, args) {
 		run(message, args)
 	},
