@@ -1,5 +1,6 @@
 const mongo = require('../mongo')
 const itemSchema = require('../schemas/itemSchema')
+const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'addItem',
@@ -15,28 +16,27 @@ module.exports = {
 }
 
 async function run(message, args){
-    const parts = args
     const {member, channel, content, guild} = message
 
     await mongo().then(async (mongoose) => {
         var success = false
         try {
             await new itemSchema({
-                name: parts[1],
+                name: args[0],
                 server_id: guild.id,
                 party: true,
                 owner: message.author.id,
-                description: parts[2]
+                description: args[1]
             }).save()
             success = true
         } catch(e){
             if(e.code = 'E11000'){
-                channel.send('<@' + message.author.id + '> An item with that name already exists. You can use !updateItem to change its description, or !viewItem to check its properties.')
+                channel.send(`<@${message.author.id}> An item with that name already exists. You can use ${prefix}updateItem to change its description, or ${prefix}viewItem to check its properties.`)
             }
         } finally {
             mongoose.connection.close()
             if(success){
-                channel.send('<@' + message.author.id + '>, item added!')
+                channel.send(`<@${message.author.id}>, item added!`)
             }
         }
     })

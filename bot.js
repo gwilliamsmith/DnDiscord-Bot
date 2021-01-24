@@ -39,8 +39,6 @@ client.on('message', message => {
 
 	if(command.dbCommand){
 		args = formatDBParams(args)
-		console.log('db ' + args)
-		console.log(args)
 	}
 
 	if(args.length > command.minArgs || args.length < command.maxArgs){

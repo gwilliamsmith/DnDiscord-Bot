@@ -1,9 +1,10 @@
 const mongo = require('../mongo')
 const itemSchema = require('../schemas/itemSchema')
+const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'updateItem',
-	description: 'Adds an item to the server inventory',
+	description: 'Updates an item to in server inventory',
 	minArgs: 2,
     maxArgs: 2,
     dbCommand: true,
@@ -15,25 +16,23 @@ module.exports = {
 }
 
 async function run(message, args){
-
-    const parts = args
     const {member, channel, content, guild} = message
 
     await mongo().then(async (mongoose) => {
         var success = false
         try{
-            const check = await itemSchema.exists({name: parts[1], server_id: guild.id})
+            const check = await itemSchema.exists({name: args[0], server_id: guild.id})
             if(check){
                 await itemSchema.findOneAndUpdate({
-                    name: parts[1],
+                    name: args[0],
                     server_id: guild.id
                 },{
-                    $set : {description: parts[2]}
+                    $set : {description: args[1]}
                 })
                 success = true
             }
             else {
-                channel.send('<@' + message.author.id + '>, that item does not exist. You can use !addItem to create a new item.')
+                channel.send(`<@${message.author.id}>, that item does not exist. You can use ${prefix}addItem to create a new item.`)
             }
         } finally {
             mongoose.connection.close()
