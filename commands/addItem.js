@@ -9,7 +9,8 @@ module.exports = {
     maxArgs: 2,
     dbCommand: true,
     expectedArgs: ['[<name>]', '[<description>]'],
-    requiredRole: 'DM',
+    permissionRequired: true,
+    requiredRoles: ['DM'],
 	execute(message, args) {
 		run(message, args)
 	},

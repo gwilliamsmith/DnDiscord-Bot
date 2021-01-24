@@ -30,21 +30,41 @@ client.on('message', message => {
 	var args = message.content.slice(prefix.length).trim().split(/ +/)
 	const commandName = args.shift()
 
+	//Check to see if the message is in the command list
 	if (!client.commands.has(commandName)){
 		return
 	}
 
 	const command = client.commands.get(commandName)
 
+	//Check to see if the command args require special formatting
 	if(command.dbCommand){
 		args = formatDBParams(args)
 	}
 
+	//Check to see if the command requires permission - if true, then check to see if the user has the correct permission
+	if(command.permissionRequired){
+		var allowed = false
+		for(var i=0;i<command.requiredRoles.length;i++){
+			const role = command.requiredRoles[i]
+			if(message.member.roles.cache.some(r => r.name === role)){
+				allowed = true
+				break
+			}
+		}
+		if(!allowed){
+			message.reply(` you don't have the required permissions to use ${prefix}${command.name}`)
+			return
+		}
+	}
+
+	//Check to make sure the correct number of args are passed to the command
 	if(args.length > command.minArgs || args.length < command.maxArgs){
 		message.reply(`${prefix}${command.name} does not have the correct number of arguments. ${prefix}${command.name} expects the following arguments: \n ${command.expectedArgs}`)
 		return
 	}
 
+	//Run the command
 	try {
 		command.execute(message, args)
 	} catch (error) {
@@ -53,6 +73,7 @@ client.on('message', message => {
 	}
 })
 
+//Formatting function for commands that talk to mongoDB
 function formatDBParams(args){
 	var join = args.join(' ')
 	var parts = join.split('[')
