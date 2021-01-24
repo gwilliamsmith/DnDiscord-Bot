@@ -4,6 +4,7 @@ const itemSchema = require('./schemas/itemSchema')
 
 module.exports = (client) => {
 
+	/*
 	//!addItem [NAME] [DESC]
 	//Adds Item to the database - should only be usable by server admins or someone with the DM role
 	command(client, 'addItem', async (message) => {
@@ -39,6 +40,7 @@ module.exports = (client) => {
 			}
 		})
 	})
+	*/
 
 	//!updateItem [NAME] [NEW DESC]
 	//Updates an item in the database, replacing its old description with the provided one
