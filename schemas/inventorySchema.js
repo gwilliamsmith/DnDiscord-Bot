@@ -12,6 +12,6 @@ const inventorySchema = mongoose.Schema({
     quantity: {type: Number, required: true}
 })
 
-inventorySchema.index({itemName: 1, server_id: 1, owner: 1}, {unique: true})
+inventorySchema.index({itemName: 1, server_id: 1, owner: 1}, {unique: true, name : 'inventory_index'})
 
 module.exports = mongoose.model('inventory', inventorySchema)
