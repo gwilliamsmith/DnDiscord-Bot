@@ -15,18 +15,15 @@ module.exports = {
 }
 
 async function run(message, args){
-    const {member, channel, content, guild} = message
-
     await mongo().then(async (mongoose) => {
         try{
-            const check = await itemSchema.exists({name: args[0], server_id: guild.id})
+            const check = await itemSchema.exists({name: args[0], server_id: message.guild.id})
             if(!check){
                 message.reply(` that item does not exist here.`)
+                return
             }
-            else {
-                const data = await itemSchema.find({name: args[0], server_id: guild.id})
-                channel.send('**' + args[0] + '**' + '\n> ' + data[0]['description'])
-            }
+            const data = await itemSchema.find({name: args[0], server_id: message.guild.id})
+            message.channel.send('**' + args[0] + '**' + '\n> ' + data[0]['description'])
         } finally {
             mongoose.connection.close()
         }

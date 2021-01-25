@@ -59,8 +59,8 @@ client.on('message', message => {
 	}
 
 	//Check to make sure the correct number of args are passed to the command
-	if(args.length > command.minArgs || args.length < command.maxArgs){
-		message.reply(`${prefix}${command.name} does not have the correct number of arguments. ${prefix}${command.name} expects the following arguments: \n ${command.expectedArgs}`)
+	if(args.length < command.minArgs || args.length > command.maxArgs){
+		message.reply(`**${prefix}${command.name}** does not have the correct number of arguments. **${prefix}${command.name}** expects the following arguments: \n ${command.expectedArgs}`)
 		return
 	}
 
@@ -79,7 +79,7 @@ function formatDBParams(args){
 	var parts = join.split('[')
 	parts.shift()
 	for (i=0; i<parts.length; i++){
-		parts[i] = parts[i].trim().replace(']','')
+		parts[i] = parts[i].trim().replace(']','').trim()
 	}
 	return parts
 }
