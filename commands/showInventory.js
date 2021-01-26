@@ -35,12 +35,12 @@ async function run(message, args){
 				}
 			}
 			const res = await inventorySchema.find({server_id : message.guild.id, owner : target})
-			var outString = `__**Viewing the inventory for ${name}**__ \n\n`
+			var outString = ` __**Viewing the inventory for ${name}**__ \n\n`
 			for(var i=0;i<res.length;i++){
 				const item = await itemSchema.find({name : res[i].itemName, server_id : message.guild.id})
 				outString += `> **${res[i].itemName}** \n`
 				outString += `> ${item[0].description} \n`
-				outString += `> Quantity:${res[i].quantity} \n`
+				outString += `> Quantity: ${res[i].quantity} \n\n`
 			}
 			message.reply(outString,{split : {prepend: '>'}})
 		} finally {
