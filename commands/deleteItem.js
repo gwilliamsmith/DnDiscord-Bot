@@ -25,13 +25,14 @@ async function run(message, args){
             const exists = await itemSchema.exists({name: args[0], server_id: message.guild.id})
             if (!exists){
                 message.reply(` that item does not exist here`)
-            } return
+                return
+            }
             const check = await itemSchema.deleteOne({name: args[0], server_id : message.guild.id})
             success = true
         } finally { 
             mongoose.connection.close()
             if(success){
-                message.reply(`<@${message.author.id}>, item deleted!`)
+                message.reply(` ${args[0]} deleted from server item list!`)
             }
         }
     })
