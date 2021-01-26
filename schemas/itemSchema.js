@@ -8,8 +8,6 @@ const reqString = {
 const itemSchema = mongoose.Schema({
 	name: reqString,
 	server_id: reqString,
-	party: Boolean,
-	owner: reqString,
 	description: String
 })
 

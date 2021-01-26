@@ -17,18 +17,18 @@ module.exports = {
 }
 
 async function run(message, args){
-    const {member, channel, content, guild} = message
-
     await mongo().then(async (mongoose) => {
         var success = false
         try{
-            const check = await itemSchema.exists({name: args[0], server_id: guild.id})
+            const check = await itemSchema.exists({name: args[0], server_id: message.guild.id})
             if(check){
                 await itemSchema.findOneAndUpdate({
                     name: args[0],
-                    server_id: guild.id
+                    server_id: message.guild.id
                 },{
                     $set : {description: args[1]}
+                },{
+                    useFindAndModify : false
                 })
                 success = true
             }

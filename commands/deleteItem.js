@@ -22,16 +22,17 @@ async function run(message, args){
     await mongo().then(async (mongoose) => {
         var success = false
         try{
-            const exists = await itemSchema.exists({name: args[0], server_id: guild.id})
+            const exists = await itemSchema.exists({name: args[0], server_id: message.guild.id})
             if (!exists){
                 message.reply(` that item does not exist here`)
-            } return
-            const check = await itemSchema.deleteOne({name: args[0], server_id : guild.id})
+                return
+            }
+            const check = await itemSchema.deleteOne({name: args[0], server_id : message.guild.id})
             success = true
         } finally { 
             mongoose.connection.close()
             if(success){
-                message.reply(`<@${message.author.id}>, item deleted!`)
+                message.reply(` ${args[0]} deleted from server item list!`)
             }
         }
     })
