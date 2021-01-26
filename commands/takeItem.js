@@ -2,10 +2,11 @@ const mongo = require('../mongo')
 const itemSchema = require('../schemas/itemSchema')
 const inventorySchema = require('../schemas/inventorySchema')
 const { prefix } = require('../config.json')
+const { Mongoose } = require('mongoose')
 
 module.exports = {
-	name: 'giveItem',
-	description: 'Adds an item to a player or party inventory',
+	name: 'takeItem',
+	description: 'takes an item from a player or party inventory, and removes the entry if they no longer have any',
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
@@ -14,7 +15,7 @@ module.exports = {
     requiredRoles: ['DM'],
 	execute(message, args) {
 		run(message, args)
-	},
+    },
 }
 
 async function run(message, args){
@@ -23,9 +24,21 @@ async function run(message, args){
             var change = 1
             var target = 'party'
             //First check to see if the item exists for the server
-            const check = await itemSchema.exists({name: args[0], server_id: message.guild.id})
-            if(!check){
+            const checkServer = await itemSchema.exists({name: args[0], server_id: message.guild.id})
+            if(!checkServer){
                 message.reply(` that item does not exist here.`)
+                return
+            }
+
+            //If a user is mentioned, grab their id to use as the owner field
+            if(message.mentions.members.first()){
+                target = message.mentions.members.first().id
+            }
+
+            //Now check to see if the player or party has the item. If not, complain and exit out
+            const checkTarget = await inventorySchema.exists({itemName : args[0], server_id: message.guild.id})
+            if(!checkTarget){
+                message.reply(` ${target} does not have any ${args[0]}`)
                 return
             }
 
@@ -46,20 +59,21 @@ async function run(message, args){
                 }
                 change = parseInt(args[2])
             }
-            //If a user is mentioned, grab their id to use as the owner field
-            if(message.mentions.members.first()){
-                target = message.mentions.members.first().id
-            }
             const query = { itemName : args[0], server_id : message.guild.id, owner : target}
             console.log(target + ' ' + change)
-            await inventorySchema.findOneAndUpdate(
+
+            //Update the target's inventory, then if their quantity for that item is 0, delete it
+            const doc = await inventorySchema.findOneAndUpdate(
                 query,{
-                $inc : {quantity : +change}
+                $inc : {quantity : -change}
             },{
-                upsert : true,
+                new : true,
                 useFindAndModify : false
             })
-            message.reply(` ${target} given ${change} ${args[0]}`)
+            if(doc.quantity <= 0){
+                await inventorySchema.findOneAndDelete({itemName : doc.itemName, server_id : doc.server_id, owner : doc.owner})
+            }
+            message.reply(` ${change} ${args[0]} taken from ${target}`)
         } finally {
             mongoose.connection.close()
         }

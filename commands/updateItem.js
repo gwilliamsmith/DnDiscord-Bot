@@ -27,6 +27,8 @@ async function run(message, args){
                     server_id: message.guild.id
                 },{
                     $set : {description: args[1]}
+                },{
+                    useFindAndModify : false
                 })
                 success = true
             }
