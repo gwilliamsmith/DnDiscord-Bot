@@ -11,8 +11,6 @@ module.exports = {
     maxArgs: 3,
     dbCommand: true,
     expectedArgs: ['[<name>]', '(optional) [ <@user> OR <quantity> ]', '(optional) [<quantity>]'],
-    permissionRequired: true,
-    requiredRoles: ['DM'],
 	execute(message, args) {
 		run(message, args)
     },
