@@ -9,10 +9,16 @@ module.exports = {
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
-    expectedArgs: ['[<name>]', '(optional) [ <@user> OR <quantity> ]', '(optional) [<quantity>]'],
+    expectedArgs: ['[<item name>]', '(optional) [ <targer> OR <quantity> ]', '(optional) [<quantity>]'],
 	execute(message, args) {
 		run(message, args)
-	},
+    },
+    help: true,
+    helpString: `**${prefix}giveItem** gives an item to a player or party inventory. A DM can give items to other players.
+It takes a minimum of one and up to three arguments: \n
+[<item name>]: The name of the item to give.
+(optional) [ <target> OR <quantity> ]: target can be the party's name, or DMs can tag other players. This can also be the quantity of an item to give to yourself. Defaults to 1.
+(optional) [<quantity>]: An optional amount of the object to give. Defaults to 1.`
 }
 
 async function run(message, args){

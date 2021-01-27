@@ -37,6 +37,13 @@ client.on('message', message => {
 
 	const command = client.commands.get(commandName)
 
+	//Re-join args to check if -help is there. if it is, message the command's help string and return
+	var reargs = args.join(' ')
+	if(reargs.startsWith('help') && command.help){
+		message.reply(command.helpString)
+		return
+	}
+
 	//Check to see if the command args require special formatting
 	if(command.dbCommand){
 		args = formatDBParams(args)

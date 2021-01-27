@@ -4,7 +4,7 @@ const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'deleteItem',
-	description: 'Deletes an item from the server inventory',
+	description: 'Deletes an item from the server item list',
 	minArgs: 1,
     maxArgs: 1,
     dbCommand: true,
@@ -13,7 +13,11 @@ module.exports = {
     requiredRoles: ['DM'],
 	execute(message, args) {
 		run(message, args)
-	},
+    },
+    help: true,
+    helpString: `**${prefix}deleteItem** deletes an item from the server's item list. This command is limited to those with the 'DM' role.
+It takes one argument: \n
+[<item name>]: This is the name of the item to delete.`
 }
 
 async function run(message, args){

@@ -5,13 +5,17 @@ const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'showInventory',
-	description: 'posts the author\s or party inventory. DM roles can show any player inventory',
+	description: 'posts the author\s or party inventory. DMs can show any player inventory',
 	minArgs: 0,
     maxArgs: 1,
-    expectedArgs: ['(optional) <party name>'],
+    expectedArgs: ['(optional) <target>'],
 	execute(message, args) {
 		run(message, args)
 	},
+	help: true,
+	helpString: `**${prefix}showInventory** posts the author's or party's inventory. DMs can show any player inventory
+It takes a maximum of one argument: \n
+(optional) <target>: The party's name. DMs can tag other players to see their inventory.`
 }
 
 async function run(message, args){

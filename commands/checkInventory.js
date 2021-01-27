@@ -13,7 +13,12 @@ module.exports = {
     dbCommand: true,
 	execute(message, args) {
 		run(message, args)
-	},
+    },
+    help: true,
+    helpString: `**${prefix}checkInventory** checks the author's or party's inventory for a given item. A DM can check the inventory of other players in the server
+It takes a minimum of one, and a maximum of two arguments: \n
+[<item name>]: This is the name of the item to look for.
+(optional) [<party name OR tagged user>]: An optional argument. Players can enter their party name to check the party's inventory, and DM's can tag another player to check their inventory.`
 }
 
 async function run(message, args){
