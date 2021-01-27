@@ -8,10 +8,14 @@ module.exports = {
 	minArgs: 1,
     maxArgs: 1,
     dbCommand: true,
-    expectedArgs: ['[<name>]'],
+    expectedArgs: ['[<item name>]'],
 	execute(message, args) {
 		run(message, args)
-	},
+    },
+    help: true,
+	helpString: `**${prefix}viewItem** posts the item's information.
+It takes one argument: \n
+[<item name>]: The item to view.`
 }
 
 async function run(message, args){

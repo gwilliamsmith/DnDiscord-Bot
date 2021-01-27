@@ -8,10 +8,14 @@ module.exports = {
 	description: 'DMs the author player or party inventory',
 	minArgs: 0,
     maxArgs: 1,
-    expectedArgs: ['(optional) <party name>'],
+    expectedArgs: ['(optional) <target>'],
 	execute(message, args) {
 		run(message, args)
 	},
+	help: true,
+	helpString: `**${prefix}viewInventory** PMs the author the player's or party's inventory. DMs can view other player inventories.
+It takes a maximum of one argument: \n
+(optional) <target>: The inventory to view. DM's can tag other players to view their inventories, while non-DMs can only view the party inventory.`
 }
 
 async function run(message, args){

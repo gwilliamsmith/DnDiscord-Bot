@@ -10,10 +10,16 @@ module.exports = {
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
-    expectedArgs: ['[<name>]', '(optional) [ <@user> OR <quantity> ]', '(optional) [<quantity>]'],
+    expectedArgs: ['[<item name>]', '(optional) [ <target> OR <quantity> ]', '(optional) [<quantity>]'],
 	execute(message, args) {
 		run(message, args)
     },
+    help: true,
+    helpString: `**${prefix}takeItem** takes an item from a player's or party's inventory. It removes the item if they no longer have any. DMs can take items from any player
+It takes a minimum of one and a maximum of three arguments: \n
+[<item name>]: The name of the item to take.
+(optional) [ <target> OR <quantity> ]: target can be the party's name, or DMs can tag other players. This can also be the quantity of an item to take from yourself. Defaults to 1.
+(optional) [<quantity>]: An optional amount of the object to take. Defaults to 1.`
 }
 
 async function run(message, args){

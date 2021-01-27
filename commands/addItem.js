@@ -17,8 +17,8 @@ module.exports = {
     help: true,
     helpString: `**${prefix}addItem** adds an item to the server's inventory.
 It takes two arguments: \n 
-[<item name>]: This is the name of the item to be added to the server's inventory
-[<description>]: This is the description of the item`
+[<item name>]: This is the name of the item to be added to the server's inventory.
+[<description>]: This is the description of the item.`
 }
 
 async function run(message, args){
