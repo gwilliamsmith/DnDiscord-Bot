@@ -4,16 +4,21 @@ const { prefix } = require('../config.json')
 
 module.exports = {
 	name: 'addItem',
-	description: 'Adds an item to the server inventory',
+    description: 'Adds an item to the server inventory.',
 	minArgs: 2,
     maxArgs: 2,
     dbCommand: true,
-    expectedArgs: ['[<name>]', '[<description>]'],
+    expectedArgs: ['[<item name>]', '[<description>]'],
     permissionRequired: true,
     requiredRoles: ['DM'],
 	execute(message, args) {
 		run(message, args)
-	},
+    },
+    help: true,
+    helpString: `**${prefix}addItem** adds an item to the server's inventory.
+It takes two arguments: \n 
+[<item name>]: This is the name of the item to be added to the server's inventory
+[<description>]: This is the description of the item`
 }
 
 async function run(message, args){
