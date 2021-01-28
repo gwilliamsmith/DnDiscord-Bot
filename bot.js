@@ -108,7 +108,7 @@ function findCommands(dir, callback) {
                     let command = require(`./${filepath}`);
                     console.log(`Loading Command: ${command.name} ✔`);
 					client.commands.set(command.name, command);
-					/*
+					/* This is for aliases, when I decide to get to adding them to commands
                     command.conf.aliases.forEach(alias => {
 					client.aliases.set(alias, command.help.name);
 					  });

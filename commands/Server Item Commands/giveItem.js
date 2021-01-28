@@ -9,7 +9,7 @@ module.exports = {
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
-    expectedArgs: ['[<item name>]', '(optional) [ <targer> OR <quantity> ]', '(optional) [<quantity>]'],
+    expectedArgs: ['[<item name>]', '(optional) [ <target> OR <quantity> ]', '(optional) [<quantity>]'],
 	execute(message, args) {
 		run(message, args)
     },
