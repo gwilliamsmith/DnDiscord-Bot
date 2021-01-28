@@ -1,7 +1,7 @@
-const mongo = require('../mongo')
-const itemSchema = require('../schemas/itemSchema')
-const inventorySchema = require('../schemas/inventorySchema')
-const { prefix } = require('../config.json')
+const mongo = require('../../mongo')
+const itemSchema = require('../../schemas/itemSchema')
+const inventorySchema = require('../../schemas/inventorySchema')
+const { prefix } = require('../../config.json')
 
 
 module.exports = {

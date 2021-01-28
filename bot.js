@@ -2,6 +2,7 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 
 const fs = require('fs')
+const path = require('path')
 
 //Config file
 const config = require('./config.json')
@@ -9,6 +10,9 @@ const prefix = config.prefix
 
 client.commands = new Discord.Collection()
 
+findCommands('./commands/')
+
+/*
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 //Look through command folder for commands
@@ -17,10 +21,10 @@ for (const file of commandFiles) {
 	console.log(`loading ${prefix}${command.name}`)
 	client.commands.set(command.name, command)
 }
+*/
 
 client.on('ready', async () => {
 	console.log("online")
-	//itemHandling(client)
 })
 
 
@@ -89,6 +93,30 @@ function formatDBParams(args){
 		parts[i] = parts[i].trim().replace(']','').trim()
 	}
 	return parts
+}
+
+function findCommands(dir, callback) {
+    fs.readdir(dir, function(err, files) {
+        if (err) throw err;
+        files.forEach(function(file) {
+            var filepath = path.join(dir, file);
+            fs.stat(filepath, function(err,stats) {
+                if (stats.isDirectory()) {
+                    findCommands(filepath, callback);
+				} 
+				else if (stats.isFile() && file.endsWith('.js')) {
+                    let command = require(`./${filepath}`);
+                    console.log(`Loading Command: ${command.name} ✔`);
+					client.commands.set(command.name, command);
+					/*
+                    command.conf.aliases.forEach(alias => {
+					client.aliases.set(alias, command.help.name);
+					  });
+					*/
+                }
+            });
+        });
+    });
 }
 
 // Provide token from config.json

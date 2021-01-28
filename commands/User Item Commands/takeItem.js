@@ -1,24 +1,25 @@
-const mongo = require('../mongo')
-const itemSchema = require('../schemas/itemSchema')
-const inventorySchema = require('../schemas/inventorySchema')
-const { prefix } = require('../config.json')
+const mongo = require('../../mongo')
+const itemSchema = require('../../schemas/itemSchema')
+const inventorySchema = require('../../schemas/inventorySchema')
+const { prefix } = require('../../config.json')
+const { Mongoose } = require('mongoose')
 
 module.exports = {
-	name: 'giveItem',
-	description: 'Adds an item to a player or party inventory',
+	name: 'takeItem',
+	description: 'takes an item from a player or party inventory, and removes the entry if they no longer have any. Defaults to taking items from the user using the command',
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
-    expectedArgs: ['[<item name>]', '(optional) [ <targer> OR <quantity> ]', '(optional) [<quantity>]'],
+    expectedArgs: ['[<item name>]', '(optional) [ <target> OR <quantity> ]', '(optional) [<quantity>]'],
 	execute(message, args) {
 		run(message, args)
     },
     help: true,
-    helpString: `**${prefix}giveItem** gives an item to a player or party inventory. A DM can give items to other players.
-It takes a minimum of one and up to three arguments: \n
-[<item name>]: The name of the item to give.
-(optional) [ <target> OR <quantity> ]: target can be the party's name, or DMs can tag other players. This can also be the quantity of an item to give to yourself. Defaults to 1.
-(optional) [<quantity>]: An optional amount of the object to give. Defaults to 1.`
+    helpString: `**${prefix}takeItem** takes an item from a player's or party's inventory. It removes the item if they no longer have any. DMs can take items from any player
+It takes a minimum of one and a maximum of three arguments: \n
+[<item name>]: The name of the item to take.
+(optional) [ <target> OR <quantity> ]: target can be the party's name, or DMs can tag other players. This can also be the quantity of an item to take from yourself. Defaults to 1.
+(optional) [<quantity>]: An optional amount of the object to take. Defaults to 1.`
 }
 
 async function run(message, args){
@@ -33,6 +34,7 @@ async function run(message, args){
                 message.reply(` that item does not exist here.`)
                 return
             }
+
 
             //Check to see if two or more args have been passed - if yes that means a user or party has been specified at args[1]
             if(args.length >= 2){
@@ -52,6 +54,13 @@ async function run(message, args){
                     target = 'party'
                     name = 'party'
                 }
+            }   
+
+            //Now check to see if the player or party has the item. If not, complain and exit out
+            const checkTarget = await inventorySchema.exists({itemName : args[0], server_id: message.guild.id})
+            if(!checkTarget){
+                message.reply(` ${target} does not have any ${args[0]}`)
+                return
             }
 
             //If only two args were given, check to see if args[1] is a number
@@ -73,20 +82,21 @@ async function run(message, args){
                 }
                 change = parseInt(args[2])
             }
-            //If a user is mentioned, grab their id to use as the owner field
-            if(message.mentions.members.first()){
-                target = message.mentions.members.first().id
-            }
             const query = { itemName : args[0], server_id : message.guild.id, owner : target}
             console.log(target + ' ' + change)
-            await inventorySchema.findOneAndUpdate(
+
+            //Update the target's inventory, then if their quantity for that item is 0, delete it
+            const doc = await inventorySchema.findOneAndUpdate(
                 query,{
-                $inc : {quantity : +change}
+                $inc : {quantity : -change}
             },{
-                upsert : true,
+                new : true,
                 useFindAndModify : false
             })
-            message.reply(` ${name} given ${change} ${args[0]}`)
+            if(doc.quantity <= 0){
+                await inventorySchema.findOneAndDelete({itemName : doc.itemName, server_id : doc.server_id, owner : doc.owner})
+            }
+            message.reply(` ${change} ${args[0]} taken from ${name}`)
         } finally {
             mongoose.connection.close()
         }
