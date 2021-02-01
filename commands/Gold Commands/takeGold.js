@@ -52,7 +52,7 @@ async function run(message, args){
             //Check to see if the target has an entry in the database. If they don't, they've never been given gold and therefore have nothing to take
             const check = await goldSchema.exists({owner : target, server_id : message.guild.id})
             if(!check){
-                message.reply(` ${name} has no gold to take!`)
+                message.reply(` ${name} either doesn't exist, or has never been given gold here.`)
                 return
             }
 

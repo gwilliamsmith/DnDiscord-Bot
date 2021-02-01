@@ -30,7 +30,7 @@ async function run(message, args){
             var s = 0
             var c = 0
             //If there are two args, they're trying to give gold to someone else.
-            if(args.length == 2){
+            if(args.length === 2){
                 //If a user is mentioned, check if they're a DM. If not, complain
                 if(message.mentions.members.first()){
                     if(message.member.roles.cache.find(r => r.name === 'DM')){
