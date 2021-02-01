@@ -1,11 +1,11 @@
-const mongo = require('../mongo')
-const itemSchema = require('../schemas/itemSchema')
-const inventorySchema = require('../schemas/inventorySchema')
-const { prefix } = require('../config.json')
+const mongo = require('../../mongo')
+const itemSchema = require('../../schemas/itemSchema')
+const inventorySchema = require('../../schemas/inventorySchema')
+const { prefix } = require('../../config.json')
 
 module.exports = {
-	name: 'viewInventory',
-	description: 'DMs the author player or party inventory',
+	name: 'showInventory',
+	description: 'posts the author\s or party inventory. DMs can show any player inventory',
 	minArgs: 0,
     maxArgs: 1,
     expectedArgs: ['(optional) <target>'],
@@ -13,9 +13,9 @@ module.exports = {
 		run(message, args)
 	},
 	help: true,
-	helpString: `**${prefix}viewInventory** PMs the author the player's or party's inventory. DMs can view other player inventories.
+	helpString: `**${prefix}showInventory** posts the author's or party's inventory. DMs can show any player inventory
 It takes a maximum of one argument: \n
-(optional) <target>: The inventory to view. DM's can tag other players to view their inventories, while non-DMs can only view the party inventory.`
+(optional) <target>: The party's name. DMs can tag other players to see their inventory.`
 }
 
 async function run(message, args){
@@ -39,16 +39,14 @@ async function run(message, args){
 				}
 			}
 			const res = await inventorySchema.find({server_id : message.guild.id, owner : target})
-			var outString = `__**Viewing the inventory for ${name}**__ \n\n`
-			message.author.send(outString)
-			outString = ``
+			var outString = ` __**Viewing the inventory for ${name}**__ \n\n`
 			for(var i=0;i<res.length;i++){
 				const item = await itemSchema.find({name : res[i].itemName, server_id : message.guild.id})
 				outString += `> **${res[i].itemName}** \n`
 				outString += `> ${item[0].description} \n`
-				outString += `> Quantity:${res[i].quantity} \n`
+				outString += `> Quantity: ${res[i].quantity} \n\n`
 			}
-			message.author.send(outString,{split : {prepend: '>'}})
+			message.reply(outString,{split : {prepend: '>'}})
 		} finally {
 			mongoose.connection.close()
 		}

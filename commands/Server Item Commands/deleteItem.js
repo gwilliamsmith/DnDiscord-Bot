@@ -1,6 +1,6 @@
-const mongo = require('../mongo')
-const itemSchema = require('../schemas/itemSchema')
-const { prefix } = require('../config.json')
+const mongo = require('../../mongo')
+const itemSchema = require('../../schemas/itemSchema')
+const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'deleteItem',

@@ -1,6 +1,6 @@
-const mongo = require('../mongo')
-const itemSchema = require('../schemas/itemSchema')
-const { prefix } = require('../config.json')
+const mongo = require('../../mongo')
+const itemSchema = require('../../schemas/itemSchema')
+const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'addItem',
@@ -33,8 +33,7 @@ async function run(message, args){
             success = true
         } catch(e){
             if(e.code = 'E11000'){
-                console.log(e)
-                //message.reply(` an item with that name already exists. You can use ${prefix}updateItem to change its description, or ${prefix}viewItem to check its properties.`)
+                message.reply(` an item with that name already exists. You can use ${prefix}updateItem to change its description, or ${prefix}viewItem to check its properties.`)
             }
         } finally {
             mongoose.connection.close()
