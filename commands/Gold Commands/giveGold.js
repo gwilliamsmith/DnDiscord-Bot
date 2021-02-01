@@ -5,7 +5,7 @@ const goldSchema = require('../../schemas/goldSchema')
 
 module.exports = {
     name: 'giveGold',
-    description: 'Gives gold to a player or party inventory',
+    description: 'Gives gold to a player or party inventory. DMs can give gold to anyone.',
     minArgs: 1,
     maxArgs: 2,
     dbCommand: true,

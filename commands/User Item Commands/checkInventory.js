@@ -6,7 +6,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'checkInventory',
-	description: 'checks the author\s or party inventory for the given item, and shows its description and the quantity if it is there. DM roles can show any player inventory',
+	description: 'Checks the author\'s or party inventory for the given item, and shows its description and the quantity if it is there. DMs can show any player inventory.',
 	minArgs: 1,
     maxArgs: 2,
     expectedArgs: ['[item name]' , '(optional) [<party name OR tagged user>]'],

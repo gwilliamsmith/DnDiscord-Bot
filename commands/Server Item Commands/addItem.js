@@ -4,7 +4,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'addItem',
-    description: 'Adds an item to the server inventory.',
+    description: 'Adds an item to the server inventory. Only DMs can use this.',
 	minArgs: 2,
     maxArgs: 2,
     dbCommand: true,

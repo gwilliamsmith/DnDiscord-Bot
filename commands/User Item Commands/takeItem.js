@@ -6,7 +6,7 @@ const { Mongoose } = require('mongoose')
 
 module.exports = {
 	name: 'takeItem',
-	description: 'takes an item from a player or party inventory, and removes the entry if they no longer have any. Defaults to taking items from the user using the command',
+	description: 'Takes an item from a player or party inventory, and removes the entry if they no longer have any. DMs can take items from anyone.',
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,
