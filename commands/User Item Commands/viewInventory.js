@@ -5,7 +5,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'viewInventory',
-	description: 'DMs the author player or party inventory',
+	description: 'Direct messages the author player or party inventory. DMs can look at anyone\'s inventory.',
 	minArgs: 0,
     maxArgs: 1,
     expectedArgs: ['(optional) <target>'],

@@ -4,7 +4,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'updateItem',
-	description: 'Updates an item in the server item list',
+	description: 'Updates an item\'s description in the server item list. Only DMs can use this.',
 	minArgs: 2,
     maxArgs: 2,
     dbCommand: true,

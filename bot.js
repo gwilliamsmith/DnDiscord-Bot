@@ -77,6 +77,10 @@ client.on('message', message => {
 
 	//Run the command
 	try {
+		if(command.name === 'commands'){
+			command.execute(message, client.commands)
+			return
+		}
 		command.execute(message, args)
 	} catch (error) {
 		console.error(error)

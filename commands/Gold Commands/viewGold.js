@@ -5,7 +5,7 @@ const goldSchema = require('../../schemas/goldSchema')
 
 module.exports = {
 	name: 'viewGold',
-	description: 'Shows how much gold the target has.',
+	description: 'Shows how much gold a player or party has. DMs can view anyone\'s gold.',
 	minArgs: 0,
     maxArgs: 1,
     dbCommand: true,

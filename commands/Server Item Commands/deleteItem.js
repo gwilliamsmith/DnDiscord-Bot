@@ -4,7 +4,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'deleteItem',
-	description: 'Deletes an item from the server item list',
+	description: 'Deletes an item from the server item list. Only DMs can use this.',
 	minArgs: 1,
     maxArgs: 1,
     dbCommand: true,

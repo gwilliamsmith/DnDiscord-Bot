@@ -5,7 +5,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'giveItem',
-	description: 'Adds an item to a player or party inventory',
+	description: 'Adds an item to a player or party inventory. DMs can give items to anyone.',
 	minArgs: 1,
     maxArgs: 3,
     dbCommand: true,

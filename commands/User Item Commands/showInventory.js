@@ -5,7 +5,7 @@ const { prefix } = require('../../config.json')
 
 module.exports = {
 	name: 'showInventory',
-	description: 'posts the author\s or party inventory. DMs can show any player inventory',
+	description: 'Posts the author\'s or party inventory. DMs can show any player inventory.',
 	minArgs: 0,
     maxArgs: 1,
     expectedArgs: ['(optional) <target>'],
